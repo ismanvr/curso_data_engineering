@@ -16,16 +16,15 @@ renamed_casted AS (
         , user_id 
         , promo_id
         , address_id
-        , created_at_utc
-        , item_order_cost_usd
-        , shipping_cost_usd
-        , total_order_cost_usd
+        , created_at
+        , shipping_cost
+        , order_cost
         , tracking_id
         , shipping_service
-        , estimated_delivery_at_utc
-        , delivered_at_utc
-				,	DATEDIFF(day, created_at_utc, delivered_at_utc) AS days_to_deliver
-        , status_order
+        , estimated_delivery_at
+        , delivered_at
+		, DATEDIFF(day, created_at, delivered_at) AS days_to_deliver        
+        , status
         , date_load
     FROM stg_orders
     )

@@ -12,20 +12,36 @@ sources:
       identifier: false
 
     freshness:
-      warn_after: {count: 24, period: hour}
-      error_after: {count: 120, period: hour}
+      warn_after: {count: 200, period: hour}
+      error_after: {count: 250, period: hour}
 
     tables:
 
       - name: addresses
         loaded_at_field: _fivetran_synced
+        description: ""
         columns:
-        - name: zipcode
-        - name: country
-        - name: address
-        - name: state
-        - name: _fivetran_deleted
-        - name: _fivetran_synced
+          - name: address_id
+            data_type: varchar
+            description: ""
+          - name: zipcode
+            data_type: number
+            description: ""
+          - name: country
+            data_type: varchar
+            description: ""
+          - name: address
+            data_type: varchar
+            description: ""
+          - name: state
+            data_type: varchar
+            description: ""
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: ""
+          - name: _fivetran_synced
+            data_type: timestamp_tz
+            description: ""
           
       - name: events
         loaded_at_field: _fivetran_synced
