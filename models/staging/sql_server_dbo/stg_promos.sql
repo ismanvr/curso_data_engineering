@@ -1,22 +1,21 @@
-with 
-
-source as (
-
-    select * from {{ source('sql_server_dbo', 'promos') }}
-
+WITH source AS (
+    SELECT * FROM {{ source('sql_server_dbo', 'promos') }}
 ),
-
-renamed as (
-
-    select
+renamed AS (
+    SELECT
+    cast(
+        {{ dbt_utils.surrogate_key ([])}}
+    )
         promo_id,
         discount,
         status,
         _fivetran_deleted,
-        _fivetran_synced as date_load
-
-    from source
-
+        _fivetran_synced AS date_load
+    FROM source
 )
 
-select * from renamed
+
+SELECT *
+FROM renamed
+
+UNION ALL
