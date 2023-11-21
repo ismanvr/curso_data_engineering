@@ -1,3 +1,10 @@
+{{ config(
+    materialized='incremental',
+    unique_key='user_id',
+    target_schema='staging',
+    target_table='users'
+) }}
+
 with 
 
 src_users as (
@@ -14,7 +21,7 @@ renamed as (
         address_id,
         last_name,
         created_at,
-        cast(regexp_replace(phone_number, '-', '') as number) as phone_number,
+        cast(replace(phone_number, '-', '') as number) as phone_number,
         total_orders,
         first_name,
         email,

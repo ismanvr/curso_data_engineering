@@ -40,9 +40,3 @@ models:
     # Applies to all files under models/example/
     example:
       +materialized: table
-
-
-models:
-  my_new_project:
-    stg_promos:
-      surrogate_key_treat_nulls_as_empty_strings: true
