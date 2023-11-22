@@ -1,10 +1,10 @@
 {{ config(
-    materialized='incremental',
+    materialized='incremental', 
     unique_key='user_id',
     target_schema='staging',
     target_table='users'
 ) }}
-
+--al ser incremental ya sabemos que no es una vista porque no existe modelo incremental con vistas
 with 
 
 src_users as (

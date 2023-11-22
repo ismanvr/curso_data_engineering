@@ -1,32 +1,26 @@
-with 
-
-src_orders as (
-
-    select * from {{ source('sql_server_dbo', 'orders') }}
-
+-- Este modelo extrae datos de la tabla 'orders'
+WITH src_orders AS (
+    SELECT * FROM {{ source('sql_server_dbo', 'orders') }}
 ),
-
-renamed_casted as (
-
-    select
-        cast(order_id as varchar(50)) as order_id,
-        cast(shipping_service as varchar(20)) as shipping_service,
-        cast(COALESCE(shipping_cost, 0) as float) as shipping_cost_in_dollars,
-        cast(address_id as varchar (50)) as address_id,
-        cast(created_at as timestamp_ntz) as created_at_utc,
-        decode(promo_id, '', '9999', {{dbt_utils.generate_surrogate_key(["promo_id"]) }}) as promo_id,
-        cast(estimated_delivery_at as timestamp_ntz) as estimated_delivery_at_utc,
-        cast(COALESCE(order_cost, 0) as float) as order_cost_in_dollars,
-        cast(user_id as varchar(50)) as user_id,
+renamed_casted AS (
+    SELECT
+        CAST(order_id AS VARCHAR(50)) AS order_id,
+        CAST(shipping_service AS VARCHAR(20)) AS shipping_service,
+        CAST(COALESCE(shipping_cost, 0) AS FLOAT) AS shipping_cost_dollars,
+        CAST(address_id AS VARCHAR(50)) AS address_id,
+        CONVERT_TIMEZONE('UTC', 'Europe/Madrid', CAST(created_at AS TIMESTAMP_NTZ)) AS created_at_utc,
+        DECODE(promo_id, '', '9999', {{ dbt_utils.generate_surrogate_key(["promo_id"]) }}) AS promo_id,
+        CONVERT_TIMEZONE('UTC', 'Europe/Madrid', CAST(estimated_delivery_at AS TIMESTAMP_NTZ)) AS estimated_delivery_at_utc,
+        CAST(COALESCE(order_cost, 0) AS FLOAT) AS order_cost_dollars,
+        CAST(user_id AS VARCHAR(50)) AS user_id,
         COALESCE(order_total, 0) AS order_total,
-        cast(delivered_at as timestamp_ntz) as delivered_at_utc,
-        cast(tracking_id as varchar(50)) as tracking_id,
-        cast(decode(status, null,'NA', status) as varchar(20)) as status,
-        --cast(_fivetran_deleted AS varchar) as _fivetran_deleted, --se eliminaria porque no lo necesitamos para el cdc, con el fivetran_synced tenemos
-        cast(_fivetran_synced as timestamp_ntz) as date_load_utc
-
-    from src_orders
-
+        CONVERT_TIMEZONE('UTC', 'Europe/Madrid', CAST(delivered_at AS TIMESTAMP_NTZ)) AS delivered_at_utc,
+        CAST(tracking_id AS VARCHAR(50)) AS tracking_id,
+        CAST(DECODE(status, NULL, 'NA', status) AS VARCHAR(20)) AS status,
+        -- No incluir _fivetran_deleted, no se necesita
+        CONVERT_TIMEZONE('UTC', 'Europe/Madrid', CAST(_fivetran_synced AS TIMESTAMP_NTZ)) AS date_load_utc
+    FROM src_orders
 )
 
-select * from renamed_casted
+SELECT * FROM renamed_casted
+

@@ -1,6 +1,6 @@
 with 
 
-source as (
+src_products as (
 
     select * from {{ source('sql_server_dbo', 'products') }}
 
@@ -9,14 +9,14 @@ source as (
 renamed as (
 
     select
-        product_id,
-        price,
-        name,
-        inventory,
-        _fivetran_deleted,
-        _fivetran_synced as date_load
+        cast(product_id as varchar(50)) as product_id,
+        cast(price as float) as price,
+        cast(name as varchar(50)) as name,
+        cast(inventory as int) as inventory,
+        --_fivetran_deleted, --borrado porque no es necesario
+        cast(_fivetran_synced as timestamp_ntz) as date_load
 
-    from source
+    from src_products
 
 )
 
