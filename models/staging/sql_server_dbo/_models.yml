@@ -13,7 +13,7 @@ models:
       - name: user_id
         tests:
           - unique
-          - not null
+          - not_null
       - name: product_id
       - name: session_id
       - name: created_at
