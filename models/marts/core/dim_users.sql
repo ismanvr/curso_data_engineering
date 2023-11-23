@@ -4,16 +4,7 @@ WITH stg_users AS (
     ),
 
 renamed_casted AS (
-    SELECT
-        user_id
-        , first_name
-        , last_name
-        , email
-        , phone_number
-        , created_at
-        , updated_at
-        , address_id
-        , date_load
+    SELECT *
     FROM stg_users
     )
 

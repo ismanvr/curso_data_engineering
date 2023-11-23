@@ -8,12 +8,15 @@ models:
       - name: event_id
         tests:
           - not_null
+          - unique
       - name: page_url
       - name: event_type
       - name: user_id
         tests:
-          - unique
           - not_null
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
       - name: product_id
       - name: session_id
       - name: created_at

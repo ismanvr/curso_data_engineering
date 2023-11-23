@@ -17,8 +17,8 @@ dim_addresses as (
             ELSE 'both'
         END as source_type
     FROM stg_addresses a
-    LEFT JOIN stg_users u ON a.address_id = u.address_id
-    LEFT JOIN stg_orders o ON a.address_id = o.address_id
+    LEFT JOIN {{ ref('stg_users') }} u ON a.address_id = u.address_id
+    LEFT JOIN {{ ref('stg_orders') }} o ON a.address_id = o.address_id
 )
 
 SELECT * FROM dim_addresses
