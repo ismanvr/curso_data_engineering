@@ -1,4 +1,4 @@
--- Este modelo extrae datos de la tabla 'orders'
+-- Este modelo extrae datos de la tabla 'orders' --no tiene la linea product, hay que verlo, tambien el shipping cost (esta a nivel de pedido y no a nivel linea de pedido tiene diferente granularidad, bajarle grano al shipping cost, si el pedido tiene 1 producto no hay problema, si tiene 3 hay que dividirlo por 3 bajando asi el grano)
 WITH src_orders AS (
     SELECT * FROM {{ source('sql_server_dbo', 'orders') }}
 ),
