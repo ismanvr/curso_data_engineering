@@ -11,13 +11,13 @@ renamed as (
     select
         cast(user_id as varchar (50)) as user_id,
         updated_at,
-        address_id,
-        last_name,
+        cast(address_id as varchar (50)) as address_id,
+        cast(last_name as varchar (20)) as last_name,
         created_at,
         cast(regexp_replace(phone_number, '-', '') as number) as phone_number,
        -- total_orders,   --lo borramos porque viene vacío
-        first_name,
-        email,
+        cast(first_name as varchar (20)) as first_name,
+        cast(email as varchar (50)) sd email,
         _fivetran_deleted,
         _fivetran_synced as f_carga
 
