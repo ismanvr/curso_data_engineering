@@ -17,7 +17,7 @@ renamed as (
         cast(regexp_replace(phone_number, '-', '') as number) as phone_number,
        -- total_orders,   --lo borramos porque viene vacío
         cast(first_name as varchar (20)) as first_name,
-        cast(email as varchar (50)) sd email,
+        cast(email as varchar (50)) as email,
         _fivetran_deleted,
         _fivetran_synced as f_carga
 
