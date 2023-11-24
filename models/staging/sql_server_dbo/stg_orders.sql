@@ -19,7 +19,7 @@ renamed_casted AS (
         CAST(DECODE(status, NULL, 'NA', status) AS VARCHAR(20)) AS status,
         -- No incluir _fivetran_deleted, no se necesita
         CONVERT_TIMEZONE('UTC', 'Europe/Madrid', CAST(_fivetran_synced AS TIMESTAMP_NTZ)) AS date_load_utc,
-        DATEDIFF(day, CAST(created_at_utc AS DATE), CAST(delivered_at_utc AS DATE)) AS days_to_deliver
+        DATEDIFF(day, CAST(created_at_utc AS DATE), CAST(delivered_at_utc AS DATE)) AS days_to_deliver,
     FROM src_orders
 )
 
