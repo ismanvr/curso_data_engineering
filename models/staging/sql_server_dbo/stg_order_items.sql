@@ -12,7 +12,7 @@ WITH stg_order_items AS (
 ),
 renamed_cast AS (
     SELECT
-        {{ dbt_utils.generate_surrogate_key(['order_id','product_id']) }} AS order_items_id,
+        {{ dbt_utils.generate_surrogate_key(['order_id','product_id']) }} AS order_items_id, --uso una clave compuesta porque la clave primaria consta de 2 columnas
         cast(order_id as varchar(50)) as order_id,
         cast(product_id as varchar (50)) as product_id,
         cast(quantity as int) as quantity,
