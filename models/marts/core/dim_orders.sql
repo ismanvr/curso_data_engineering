@@ -1,8 +1,4 @@
-{{
-  config(
-    materialized='table'
-  )
-}}
+--esto no sería una fact table, sino una dimensión debido a que order_items refleja mejor la max granularidad
 
 WITH stg_orders AS (
     SELECT * 
@@ -10,7 +6,7 @@ WITH stg_orders AS (
 ),
 
 
-fct_orders AS (
+dim_orders AS (
     SELECT
         order_id 
         , user_id 
@@ -30,4 +26,4 @@ fct_orders AS (
     FROM stg_orders
     )
 
-SELECT * FROM fct_orders
+SELECT * FROM dim_orders
