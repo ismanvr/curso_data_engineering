@@ -30,16 +30,12 @@ renamed_cast as (
         , day_before
         , year_week_day
         , week_date
-        --Añadir trimestre, cuantrimestre, semestre, año fiscal, trimestre fiscal, cuatrimestre fiscal y semestre fiscal
+       
 
     from source
->>>>>>> be34eafa411b30e32909ab39b8630908bdc6afa8
+
     
 
 )
 
-<<<<<<< HEAD
-select * from renamed_cast
-=======
-select * from renamed
->>>>>>> be34eafa411b30e32909ab39b8630908bdc6afa8
+
