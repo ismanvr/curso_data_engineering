@@ -1,15 +1,20 @@
-with 
+{{ config(
+    materialized='incremental',
+    unique_key = 'event_id',
+    target_schema='staging',
+    target_table='events'
+    ) 
+    }}
 
-source as (
-
-    select * from {{ source('sql_server_dbo', 'events') }}
+WITH stg_events AS (
+    SELECT * FROM {{ source('sql_server_dbo', 'events') }}
 
 ),
 
-renamed as (
+renamed_cast AS (
 
     select
-        event_id,
+        {{ dbt_utils.generate_surrogate_key(['event_id']) }} AS event_id,
         cast(page_url as varchar(300)) as page_url,
         event_type,
         user_id,
@@ -20,8 +25,8 @@ renamed as (
         cast(_fivetran_deleted as boolean) as _fivetran_deleted,
         cast(_fivetran_synced as timestamp) as date_load
 
-    from source
+FROM stg_events
 
 )
 
-select * from renamed
+SELECT * FROM renamed_cast

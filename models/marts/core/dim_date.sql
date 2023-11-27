@@ -1,8 +1,8 @@
 with
 
-dim_date as (
+stg_date as (
 
-    select * from {{ ref('stg_dates') }}
+    select * from {{ ref('stg_date') }}
 
 ),
 
@@ -20,9 +20,9 @@ renamed_cast as (
         , week_date
         --Añadir trimestre, cuantrimestre, semestre, año fiscal, trimestre fiscal, cuatrimestre fiscal y semestre fiscal
 
-    from source
+    from stg_date
     
 
 )
 
-select * from renamed
+select * from renamed_cast
