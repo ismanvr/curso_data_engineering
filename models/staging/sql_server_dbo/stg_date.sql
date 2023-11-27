@@ -21,8 +21,8 @@ with date as (
 select
       date_day as date_forecast
     , year(date_day)*10000+month(date_day)*100+day(date_day) as id_date
-    , year(date_day) as year
-    , month(date_day) as month
+    , year(date_day) as year1
+    , month(date_day) as month1
     ,monthname(date_day) as desc_mes
     , year(date_day)*100+month(date_day) as id_year_month
     , date_day-1 as previus_day
