@@ -12,7 +12,8 @@ renamed_cast as (
         promo_id,
         des_promo,
         discount,
-        status
+        status,
+        date_load
 
     from dim_promos
     

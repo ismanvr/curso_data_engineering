@@ -9,6 +9,12 @@
         )
 }}
 
-select * from {{ source('google_sheets', 'budget') }}
+WITH check_budget_snapshot AS (
+    SELECT * 
+    FROM {{ ref('stg_budget') }}
+)
+
+select * from check_budget_snapshot
+
 
 {% endsnapshot %}

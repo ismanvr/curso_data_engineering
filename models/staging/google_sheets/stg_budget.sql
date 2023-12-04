@@ -1,22 +1,17 @@
 with 
 
-source as (
-
+stg_budget as (
     select * from {{ source('google_sheets', 'budget') }}
-
 ),
 
-renamed as (
-
+renamed_cast as (
     select
-        _row,
-        quantity,
-        month,
-        product_id,
-        _fivetran_synced as date_load
-
-    from source
-
+        cast(_row as int) as _row,
+        cast(quantity as float) as quantity,
+        cast(month as date) as budget_date,
+        cast(product_id as varchar(100)) as product_id,
+        cast(_fivetran_synced as timestamp) as date_load
+    from stg_budget
 )
 
-select * from renamed
+select * from renamed_cast
