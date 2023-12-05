@@ -3,9 +3,14 @@ WITH stg_products AS (
     FROM {{ ref('stg_products') }}
     ),
 
-renamed_casted AS (
-    SELECT *
+dim_products AS (
+    SELECT
+        product_id,
+        product_price,
+        product_name,
+        inventory,
+        date_load
     FROM stg_products
     )
 
-SELECT * FROM renamed_casted
+SELECT * FROM dim_products

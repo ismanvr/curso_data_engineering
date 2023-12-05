@@ -21,13 +21,13 @@ with date as (
 select
       date_day as date_forecast
     , year(date_day)*10000+month(date_day)*100+day(date_day) as id_date
-    , year(date_day) as anio
-    , month(date_day) as mes
-    ,monthname(date_day) as desc_mes
-    , year(date_day)*100+month(date_day) as id_anio_mes
-    , date_day-1 as dia_previo
-    , year(date_day)||weekiso(date_day)||dayofweek(date_day) as anio_semana_dia
-    , weekiso(date_day) as semana
+    , year(date_day) as year_date
+    , month(date_day) as month_date
+    ,monthname(date_day) as desc_month
+    , year(date_day)*100+month(date_day) as id_year_month
+    , date_day-1 as day_before
+    , year(date_day)||weekiso(date_day)||dayofweek(date_day) as year_week_day
+    , weekiso(date_day) as week_date
 from date
 order by
     date_day desc
