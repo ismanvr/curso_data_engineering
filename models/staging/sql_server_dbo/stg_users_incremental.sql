@@ -4,32 +4,26 @@
     target_schema='staging',
     target_table='users'
 ) }}
---al ser incremental ya sabemos que no es una vista porque no existe modelo incremental con vistas
-with 
 
-src_users as (
-
-    select * from {{ source('sql_server_dbo', 'users') }}
-
+-- Al ser incremental, sabemos que no es una vista porque no existe un modelo incremental con vistas
+WITH src_users AS (
+    SELECT * FROM {{ source('sql_server_dbo', 'users') }}
 ),
 
-renamed as (
-
-    select
-        user_id,
+renamed AS (
+    SELECT
+        CAST(user_id AS varchar(50)) AS user_id,
         updated_at,
-        address_id,
-        last_name,
+        CAST(address_id AS varchar(50)) AS address_id,
+        total_orders,   -- lo borramos porque viene vacío--
+        CAST(last_name AS varchar(20)) AS last_name,
         created_at,
-        cast(replace(phone_number, '-', '') as number) as phone_number,
-        total_orders,
-        first_name,
-        email,
+        CAST(REPLACE(phone_number, '-', '') AS number) AS phone_number,
+        CAST(first_name AS varchar(20)) AS first_name,
+        CAST(email AS varchar(50)) AS email,
         _fivetran_deleted,
-        _fivetran_synced as f_carga
-
-    from src_users
-
+        _fivetran_synced AS f_carga
+    FROM src_users
 )
 
-select * from renamed
+SELECT * FROM renamed

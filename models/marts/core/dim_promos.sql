@@ -1,3 +1,10 @@
+{{
+  config(
+    materialized='table',
+    unique_key=['promo_id']
+  )
+}}
+
 with
 
 dim_promos as (

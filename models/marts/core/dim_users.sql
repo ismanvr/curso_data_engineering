@@ -1,6 +1,13 @@
-WITH stg_users AS (
+{{
+  config(
+    materialized='table',
+    unique_key=['user_id']
+  )
+}}
+
+WITH snapshot_users AS (
     SELECT * 
-    FROM {{ ref('stg_users') }}
+    FROM {{ ref('snapshot_users') }}
     ),
 
 dim_users AS (
@@ -14,7 +21,7 @@ dim_users AS (
         first_name,
         email,
         f_carga
-    FROM stg_users
+    FROM snapshot_users
     )
 
 SELECT * FROM dim_users

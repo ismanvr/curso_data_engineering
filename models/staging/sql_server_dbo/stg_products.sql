@@ -1,12 +1,12 @@
 with 
 
-stg_products as (
+src_products as (
 
     select * from {{ source('sql_server_dbo', 'products') }}
 
 ),
 
-renamed_cast as (
+stg_products as (
 
     select
         cast(product_id as varchar(50)) as product_id,
@@ -16,11 +16,11 @@ renamed_cast as (
         _fivetran_deleted, --podría no ser necesario
         cast(_fivetran_synced as timestamp_ntz) as date_load
 
-    from stg_products
+    from src_products
 
 )
 
-select * from renamed_cast
+select * from stg_products
 
 UNION ALL
 select {{ dbt_utils.generate_surrogate_key('9999') }},0,'no product',0,null,current_timestamp()

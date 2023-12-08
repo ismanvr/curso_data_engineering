@@ -6,11 +6,11 @@
     ) 
     }}
 
-WITH stg_order_items AS (
+WITH src_order_items AS (
     SELECT * FROM {{ source('sql_server_dbo', 'order_items') }}
 
 ),
-renamed_cast AS (
+stg_order_items AS (
     SELECT
         {{ dbt_utils.generate_surrogate_key(['order_id','product_id']) }} AS order_items_id, --uso una clave compuesta porque la clave primaria consta de 2 columnas
         cast(order_id as varchar(50)) as order_id,
@@ -18,6 +18,6 @@ renamed_cast AS (
         cast(quantity as int) as quantity,
         _fivetran_deleted,
         _fivetran_synced AS date_load
-    FROM stg_order_items
+    FROM src_order_items
 )
-SELECT * FROM renamed_cast
+SELECT * FROM stg_order_items

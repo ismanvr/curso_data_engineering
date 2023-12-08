@@ -1,4 +1,10 @@
 -- Este modelo crea una dimensión a partir de la tabla 'addresses' teniendo en cuenta que el address de donde vive a donde pide puede no ser es el mismo
+{{
+  config(
+    materialized='table',
+    unique_key=['address_id']
+  )
+}}
 WITH stg_addresses AS (
     SELECT * 
     FROM {{ ref('stg_addresses') }}
@@ -17,7 +23,7 @@ dim_addresses as (
             ELSE 'both'
         END as source_type
     FROM stg_addresses a
-    LEFT JOIN {{ ref('stg_users') }} u ON a.address_id = u.address_id
+    LEFT JOIN {{ ref('snapshot_users') }} u ON a.address_id = u.address_id
     LEFT JOIN {{ ref('stg_orders') }} o ON a.address_id = o.address_id
 )
 

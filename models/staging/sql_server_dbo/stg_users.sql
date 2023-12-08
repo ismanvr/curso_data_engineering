@@ -6,7 +6,7 @@ src_users as (
 
 ),
 
-renamed as (
+renamed_cast as (
 
     select
         cast(user_id as varchar (50)) as user_id,
@@ -25,4 +25,4 @@ renamed as (
 
 )
 
-select * from renamed
+select * from renamed_cast

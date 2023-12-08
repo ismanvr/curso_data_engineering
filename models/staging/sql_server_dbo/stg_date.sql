@@ -20,7 +20,7 @@ with date as (
 
 select
       date_day as date_forecast
-    , year(date_day)*10000+month(date_day)*100+day(date_day) as id_date
+    , year(date_day)*10000+month(date_day)*100+day(date_day) as date_id
     , year(date_day) as year_date
     , month(date_day) as month_date
     ,monthname(date_day) as desc_month

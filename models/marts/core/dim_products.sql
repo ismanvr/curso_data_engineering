@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized='table',
+    unique_key=['product_id']
+  )
+}}
 WITH stg_products AS (
     SELECT * 
     FROM {{ ref('stg_products') }}

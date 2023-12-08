@@ -2,7 +2,7 @@ with src_promos as (
     select * from {{ source('sql_server_dbo', 'promos') }}
 ),
 
-renamed_casted as (
+stg_promos as (
     select
         cast(
             {{ dbt_utils.generate_surrogate_key (["promo_id"]) }} as varchar (50)
@@ -16,13 +16,13 @@ renamed_casted as (
 )
 
 select *
-from renamed_casted
+from stg_promos
 union all
 select
     {{ dbt_utils.generate_surrogate_key (["9999"]) }} as promo_id,
-    'sin promo' as des_promo,
+    'no promo' as des_promo,
     '0' as discount,
     'inactive' as status,
     null as _fivetran_deleted,
     MIN(date_load) as date_load
-from renamed_casted
+from stg_promos

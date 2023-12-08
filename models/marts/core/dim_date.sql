@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized='table',
+    unique_key=['date_id']
+  )
+}}
 with
 
 stg_date as (
@@ -10,7 +16,7 @@ renamed_cast as (
 
     select
         date_forecast
-        , id_date
+        , date_id
         , year_date
         , month_date
         , desc_month
