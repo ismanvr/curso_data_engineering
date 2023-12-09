@@ -9,7 +9,7 @@ src_products as (
 stg_products as (
 
     select
-        cast(product_id as varchar(50)) as product_id,
+        CAST({{ dbt_utils.generate_surrogate_key(['product_id']) }} AS VARCHAR(50)) AS product_id,
         cast(price as float) as product_price,
         cast(name as varchar(50)) as product_name,
         cast(inventory as int) as inventory,

@@ -108,7 +108,6 @@ sources:
               column_name: order_total
           - is_date:
               column_name: created_at
-              column_name: estimated_delivery
         columns:
           - name: order_id
             data_type: varchar
@@ -128,7 +127,7 @@ sources:
           - name: promo_id
             data_type: varchar
             description: "The unique identifier for the promotion associated with the order."
-          - name: estimated_delivery
+          - name: estimated_delivery_at
             data_type: timestamp_tz
             description: "The estimated delivery date for the order."
           - name: order_cost
@@ -165,8 +164,6 @@ sources:
           - not_null:
               column_name: order_id
               column_name: product_id
-          - unique:
-              column_name: order_id
           - positive_values:
               column_name: quantity
         columns:

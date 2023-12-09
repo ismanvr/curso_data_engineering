@@ -13,6 +13,7 @@ WITH check_budget_snapshot AS (
 fct_budget as (
 
     select
+        budget_id,
         _row,
         quantity,
         budget_date,

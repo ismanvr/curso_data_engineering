@@ -10,9 +10,9 @@ WITH src_users AS (
     SELECT * FROM {{ source('sql_server_dbo', 'users') }}
 ),
 
-renamed AS (
+stg_users AS (
     SELECT
-        CAST(user_id AS varchar(50)) AS user_id,
+        CAST({{ dbt_utils.generate_surrogate_key(['user_id']) }} AS VARCHAR(50)) AS user_id,
         updated_at,
         CAST(address_id AS varchar(50)) AS address_id,
         total_orders,   -- lo borramos porque viene vacío--
@@ -26,4 +26,4 @@ renamed AS (
     FROM src_users
 )
 
-SELECT * FROM renamed
+SELECT * FROM stg_users

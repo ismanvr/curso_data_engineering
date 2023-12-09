@@ -5,9 +5,9 @@
   )
 }}
 
-WITH stg_events AS (
+WITH intermediate_events AS (
     SELECT * 
-    FROM {{ ref('stg_events') }}
+    FROM {{ ref('intermediate_events') }}
 ),
 
 
@@ -24,7 +24,7 @@ fct_events AS (
         order_id,
         date_load
 
-FROM stg_events
+FROM intermediate_events
 
 )
 

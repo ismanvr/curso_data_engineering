@@ -5,9 +5,9 @@ src_addresses as (
     select * from {{ source('sql_server_dbo', 'addresses') }}
 ),
 
-renamed as (
+stg_addresses as (
     select
-        cast(address_id as varchar(50)) as address_id,
+        CAST({{ dbt_utils.generate_surrogate_key(['address_id']) }} AS VARCHAR(50)) AS address_id,
         cast(zipcode as varchar(20)) as zipcode,
         cast(country as varchar(20)) as country,
         COALESCE(cast(address as varchar(255)), 'N/A') as address,
@@ -17,4 +17,4 @@ renamed as (
     from src_addresses
 )
 
-select * from renamed
+select * from stg_addresses

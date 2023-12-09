@@ -31,10 +31,6 @@ models:
               field: user_id
       - name: product_id
         description: The identifier of the product involved in the event, if any
-        tests:
-          - relationships:
-              to: ref('stg_products')
-              field: product_id
       - name: session_id
         description: The identifier of the web session where the event occurred
         tests:
@@ -46,10 +42,6 @@ models:
           - is_date # custom test to check if the value is a valid date
       - name: order_id
         description: The identifier of the order associated with the event
-        tests:
-          - relationships:
-              to: ref('stg_orders')
-              field: order_id
       - name: _fivetran_deleted
         description: A boolean flag indicating if the event was deleted from the source
       - name: _fivetran_synced

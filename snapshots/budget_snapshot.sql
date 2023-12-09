@@ -3,7 +3,7 @@
 {{
     config(
       target_schema='snapshots',
-      unique_key='_row',
+      unique_key='budget_id',
       strategy='timestamp',
       updated_at='date_load',
     )
