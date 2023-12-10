@@ -24,7 +24,7 @@ intermediate_orders AS (
         , u.user_id 
         , o.order_total
         , CASE 
-            WHEN p.promo_id IS NULL OR p.promo_id = '' THEN '9999' 
+            WHEN p.promo_id IS NULL OR p.promo_id = '' THEN CAST({{ dbt_utils.generate_surrogate_key(['9999']) }} AS VARCHAR(50))
             ELSE p.promo_id 
           END AS promo_id
         , a.address_id

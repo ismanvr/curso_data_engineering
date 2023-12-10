@@ -12,7 +12,7 @@ stg_date as (
 
 ),
 
-renamed_cast as (
+dim_date as (
 
     select
         date_forecast
@@ -24,11 +24,13 @@ renamed_cast as (
         , day_before
         , year_week_day
         , week_date
-        --Añadir trimestre, cuantrimestre, semestre, año fiscal, trimestre fiscal, cuatrimestre fiscal y semestre fiscal
+        , quarter
+        , quadmester
+        , semester
 
     from stg_date
     
 
 )
 
-select * from renamed_cast
+select * from dim_date

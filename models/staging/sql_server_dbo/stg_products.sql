@@ -13,7 +13,7 @@ stg_products as (
         cast(price as float) as product_price,
         cast(name as varchar(50)) as product_name,
         cast(inventory as int) as inventory,
-        _fivetran_deleted, --podría no ser necesario
+        _fivetran_deleted,
         cast(_fivetran_synced as timestamp_ntz) as date_load
 
     from src_products

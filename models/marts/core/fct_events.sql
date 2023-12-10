@@ -1,8 +1,7 @@
-{{
-  config(
-    materialized='table',
-    unique_key=['event_id']
-  )
+{{ config(
+    materialized='incremental',
+    unique_key='event_id'
+) 
 }}
 
 WITH intermediate_events AS (
@@ -10,10 +9,8 @@ WITH intermediate_events AS (
     FROM {{ ref('intermediate_events') }}
 ),
 
-
 fct_events AS (
-
-    select
+    SELECT
         event_id,
         page_url,
         event_type,
@@ -23,9 +20,7 @@ fct_events AS (
         created_at,
         order_id,
         date_load
-
-FROM intermediate_events
-
+    FROM intermediate_events
 )
 
 SELECT * FROM fct_events

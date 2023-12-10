@@ -7,13 +7,13 @@
 
 with
 
-dim_promos as (
+stg_promos as (
 
     select * from {{ ref('stg_promos') }}
 
 ),
 
-renamed_cast as (
+dim_promos as (
 
     select
         promo_id,
@@ -22,9 +22,9 @@ renamed_cast as (
         status,
         date_load
 
-    from dim_promos
+    from stg_promos
     
 
 )
 
-select * from renamed_cast
+select * from dim_promos

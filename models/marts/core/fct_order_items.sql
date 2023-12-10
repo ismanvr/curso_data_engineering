@@ -1,6 +1,6 @@
 {{ config(
-  materialized='table',
-  unique_key=['order_items_id']
+  materialized='incremental',
+  unique_key='order_items_id'
 ) }}
 
 WITH intermediate_orderitems AS (
@@ -10,12 +10,12 @@ WITH intermediate_orderitems AS (
 
 fct_order_items AS (
     SELECT
-        i.order_items_id 
-        , i.order_id 
-        , i.product_id
-        , i.quantity
-        , i.date_load
-    FROM intermediate_orderitems i
+        order_items_id 
+        , order_id 
+        , product_id
+        , quantity
+        , date_load
+    FROM intermediate_orderitems
 )
 
 SELECT * FROM fct_order_items

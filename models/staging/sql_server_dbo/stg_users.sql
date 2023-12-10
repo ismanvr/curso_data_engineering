@@ -1,28 +1,28 @@
-with 
+{{ config(
+    materialized='incremental', 
+    unique_key='user_id',
+    target_schema='staging',
+    target_table='users'
+) }}
 
-src_users as (
-
-    select * from {{ source('sql_server_dbo', 'users') }}
-
+WITH src_users AS (
+    SELECT * FROM {{ source('sql_server_dbo', 'users') }}
 ),
 
-renamed_cast as (
-
-    select
-        cast(user_id as varchar (50)) as user_id,
-        updated_at,
-        cast(address_id as varchar (50)) as address_id,
-        cast(last_name as varchar (20)) as last_name,
-        created_at,
-        cast(replace(phone_number, '-', '') as number) as phone_number,
-       -- total_orders,   --lo borramos porque viene vacío
-        cast(first_name as varchar (20)) as first_name,
-        cast(email as varchar (50)) as email,
-        _fivetran_deleted,
-        _fivetran_synced as f_carga
-
-    from src_users
-
+stg_users AS (
+    SELECT
+        CAST({{ dbt_utils.generate_surrogate_key(['user_id']) }} AS VARCHAR(50)) AS user_id,
+        CAST(updated_at AS TIMESTAMP_NTZ) AS updated_at,
+        CAST(address_id AS VARCHAR(50)) AS address_id,
+        CAST(total_orders AS INT) AS total_orders,
+        CAST(last_name AS VARCHAR(20)) AS last_name,
+        CAST(created_at AS TIMESTAMP_NTZ) AS created_at,
+        CAST(REPLACE(phone_number, '-', '') AS VARCHAR(20)) AS phone_number,
+        CAST(first_name AS VARCHAR(20)) AS first_name,
+        CAST(email AS VARCHAR(50)) AS email,
+        CAST(_fivetran_deleted AS BOOLEAN) AS _fivetran_deleted,
+        CAST(_fivetran_synced AS TIMESTAMP_NTZ) AS f_carga
+    FROM src_users
 )
 
-select * from renamed_cast
+SELECT * FROM stg_users

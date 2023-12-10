@@ -5,9 +5,9 @@
   )
 }}
 
-WITH check_budget_snapshot AS (
+WITH intermediate_budget_products AS (
     SELECT * 
-    FROM {{ ref('check_budget_snapshot') }}
+    FROM {{ ref('intermediate_budget_products') }}
 ),
 
 fct_budget as (
@@ -20,7 +20,7 @@ fct_budget as (
         product_id,
         date_load
 
-    from check_budget_snapshot
+    from intermediate_budget_products
 
 )
 

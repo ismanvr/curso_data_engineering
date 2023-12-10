@@ -1,4 +1,4 @@
---esto no sería una fact table, sino una dimensión debido a que order_items refleja mejor la max granularidad
+
 {{
   config(
     materialized='table',

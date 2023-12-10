@@ -1,4 +1,12 @@
 
+{{ config(
+    materialized='incremental',
+    unique_key = 'order_items_id',
+    target_schema='staging',
+    target_table='intermediate_order_items'
+) 
+}}
+
 WITH stg_order_items AS (
     SELECT * 
     FROM {{ ref('stg_order_items') }}
