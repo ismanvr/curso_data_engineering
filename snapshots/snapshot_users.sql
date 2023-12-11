@@ -14,5 +14,5 @@ select *
 
 from {{ ref('stg_users') }}
 
-WHERE f_carga = (select max(f_carga) from {{ ref('stg_users') }}) -- con esto hago la snapshot incremental, es importante que sea = porque si fuese > diría que la fecha de carga sea mayor que la ult y no tiene sentido
+WHERE date_load = (select max(date_load) from {{ ref('stg_users') }}) -- con esto hago la snapshot incremental, es importante que sea = porque si fuese > diría que la fecha de carga sea mayor que la ult y no tiene sentido
 {% endsnapshot %}

@@ -1,3 +1,9 @@
+{{ config(
+    materialized='view',
+    target_schema='core',
+    target_table='intermediate_budget_products'
+) 
+}}
 WITH check_budget_snapshot AS (
     SELECT * 
     FROM {{ ref('check_budget_snapshot') }}

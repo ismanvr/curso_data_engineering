@@ -75,7 +75,7 @@ models:
           - not_null
           - is_date
 
-  - name: date
+  - name: stg_date
     description: This table contains dates from '2000-01-01' to the current date.
     columns:
       - name: date_forecast
@@ -324,7 +324,7 @@ models:
           - not_null
       - name: _fivetran_deleted
         description: A boolean flag indicating whether the record was deleted.
-      - name: f_carga
+      - name: date_load
         description: The timestamp when the data was loaded.
         tests:
           - not_null

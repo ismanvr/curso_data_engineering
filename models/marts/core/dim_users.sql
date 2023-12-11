@@ -1,13 +1,13 @@
 {{
   config(
-    materialized='table',
+    materialized='incremental',
     unique_key=['user_id']
   )
 }}
 
-WITH snapshot_users AS (
+WITH intermediate_users AS (
     SELECT * 
-    FROM {{ ref('snapshot_users') }}
+    FROM {{ ref('intermediate_users') }}
     ),
 
 dim_users AS (
@@ -20,8 +20,8 @@ dim_users AS (
         phone_number,
         first_name,
         email,
-        f_carga
-    FROM snapshot_users
+        date_load
+    FROM intermediate_users
     )
 
 SELECT * FROM dim_users

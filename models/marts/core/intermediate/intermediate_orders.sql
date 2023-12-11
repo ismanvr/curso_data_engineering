@@ -1,11 +1,26 @@
+
+{{ config(
+    materialized='view',
+    unique_key = 'orders_id',
+    target_schema='core',
+    target_table='intermediate_orders'
+) 
+}}
+
 WITH stg_orders AS (
     SELECT * 
     FROM {{ ref('stg_orders') }}
+    {% if is_incremental() %}
+    WHERE date_load_utc > (SELECT max(date_load_utc) FROM {{ this }})
+    {% endif %}
 ),
 
 snapshot_users AS (
     SELECT *
     FROM {{ ref('snapshot_users') }}
+    {% if is_incremental() %}
+    WHERE date_load > (SELECT max(date_load) FROM {{ this }})
+    {% endif %}
 ),
 
 stg_promos AS (

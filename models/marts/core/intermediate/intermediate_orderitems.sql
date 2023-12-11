@@ -1,8 +1,8 @@
 
 {{ config(
-    materialized='incremental',
+    materialized='view',
     unique_key = 'order_items_id',
-    target_schema='staging',
+    target_schema='core',
     target_table='intermediate_order_items'
 ) 
 }}
@@ -10,11 +10,17 @@
 WITH stg_order_items AS (
     SELECT * 
     FROM {{ ref('stg_order_items') }}
+    {% if is_incremental() %}
+    WHERE date_load > (SELECT max(date_load) FROM {{ this }})
+    {% endif %}
 ),
 
 stg_orders AS (
     SELECT *
     FROM {{ ref('stg_orders') }}
+    {% if is_incremental() %}
+    WHERE date_load_utc > (SELECT max(date_load_utc) FROM {{ this }})
+    {% endif %}
 ),
 
 stg_products AS (

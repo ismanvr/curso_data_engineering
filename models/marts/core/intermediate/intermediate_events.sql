@@ -1,7 +1,6 @@
 {{ config(
-    materialized='incremental',
-    unique_key = 'event_id',
-    target_schema='staging',
+    materialized='view',
+    target_schema='core',
     target_table='intermediate_events'
 ) 
 }}
@@ -9,6 +8,9 @@
 WITH stg_events AS (
     SELECT * 
     FROM {{ ref('stg_events') }}
+{% if is_incremental() %}
+    WHERE date_load > (SELECT max(date_load) FROM {{ this }})
+    {% endif %}
 ),
 stg_products AS (
     SELECT * 
@@ -17,10 +19,16 @@ stg_products AS (
 stg_orders AS (
     SELECT * 
     FROM {{ ref('stg_orders') }}
+{% if is_incremental() %}
+    WHERE date_load_utc > (SELECT max(date_load_utc) FROM {{ this }})
+    {% endif %}
 ),
 snapshot_users AS (
     SELECT *
     FROM {{ ref('snapshot_users') }}
+{% if is_incremental() %}
+    WHERE date_load > (SELECT max(date_load) FROM {{ this }})
+    {% endif %}
 ),
 intermediate_events AS (
     SELECT 

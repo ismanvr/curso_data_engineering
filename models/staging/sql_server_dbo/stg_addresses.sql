@@ -12,7 +12,7 @@ stg_addresses as (
         cast(country as varchar(20)) as country,
         COALESCE(cast(address as varchar(255)), 'N/A') as address,
         cast(state as varchar(50)) as state,
-       -- _fivetran_deleted,
+        _fivetran_deleted,
         cast(_fivetran_synced as timestamp_ntz) as date_load
     from src_addresses
 )

@@ -11,9 +11,13 @@ WITH src_users AS (
 
 stg_users AS (
     SELECT
-        CAST({{ dbt_utils.generate_surrogate_key(['user_id']) }} AS VARCHAR(50)) AS user_id,
+        CAST({{ dbt_utils.generate_surrogate_key(['user_id']) }} AS VARCHAR(50))
+            AS user_id,
         CAST(updated_at AS TIMESTAMP_NTZ) AS updated_at,
-        CAST(address_id AS VARCHAR(50)) AS address_id,
+        CAST(
+            {{ dbt_utils.generate_surrogate_key(['address_id']) }} AS VARCHAR(50)
+        )
+            AS address_id,
         CAST(total_orders AS INT) AS total_orders,
         CAST(last_name AS VARCHAR(20)) AS last_name,
         CAST(created_at AS TIMESTAMP_NTZ) AS created_at,
@@ -21,8 +25,9 @@ stg_users AS (
         CAST(first_name AS VARCHAR(20)) AS first_name,
         CAST(email AS VARCHAR(50)) AS email,
         CAST(_fivetran_deleted AS BOOLEAN) AS _fivetran_deleted,
-        CAST(_fivetran_synced AS TIMESTAMP_NTZ) AS f_carga
+        CAST(_fivetran_synced AS TIMESTAMP_NTZ) AS date_load
     FROM src_users
 )
 
 SELECT * FROM stg_users
+

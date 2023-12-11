@@ -225,7 +225,7 @@ models:
         description: The first name of the user
       - name: email
         description: The email of the user
-      - name: f_carga
+      - name: date_load
         description: The load date of the user
         tests:
           - not_null
