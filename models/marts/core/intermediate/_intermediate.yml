@@ -1,0 +1,284 @@
+version: 2
+
+models:
+  - name: intermediate_addresses
+    description: |
+      This table contains the intermediate addresses data. It is created by joining the stg_addresses, snapshot_users, and stg_orders tables. The source_type field indicates whether the address comes from a user, an order, or both.
+    columns:
+      - name: address_id
+        description: The unique identifier for the address.
+        tests:
+          - not_null
+          - unique
+      - name: zipcode
+        description: The postal code for the address.
+        tests:
+          - not_null
+      - name: country
+        description: The country of the address.
+        tests:
+          - not_null
+      - name: address
+        description: The full address.
+        tests:
+          - not_null
+      - name: state
+        description: The state of the address.
+        tests:
+          - not_null
+      - name: date_load
+        description: The date when the data was loaded into the database.
+        tests:
+          - not_null
+      - name: source_type
+        description: Indicates whether the address comes from a user, an order, or both.
+        tests:
+          - not_null
+
+  - name: intermediate_budget_products
+    description: |
+      This table contains the intermediate budget products data. It is created by joining the check_budget_snapshot and stg_products tables. The product_id field is set to 'No Product ID' if it is null or empty in the original data.
+    columns:
+      - name: budget_id
+        description: The unique identifier for the budget.
+        tests:
+          - not_null
+          - unique
+      - name: product_id
+        description: The unique identifier for the product. Set to 'No Product ID' if it is null or empty in the original data.
+        tests:
+          - not_null
+      - name: _row
+        description: The row number.
+        tests:
+          - not_null
+      - name: quantity
+        description: The quantity of the product in the budget.
+        tests:
+          - not_null
+      - name: budget_date
+        description: The date of the budget.
+        tests:
+          - not_null
+      - name: date_load
+        description: The date when the data was loaded into the database.
+        tests:
+          - not_null
+
+  - name: intermediate_events
+    description: |
+      This table contains the intermediate events data. It is created by joining the stg_events, stg_products, stg_orders, and snapshot_users tables. The product_id and order_id fields are set to 'Not applicable' if they are null or empty in the original data.
+    columns:
+      - name: event_id
+        description: The unique identifier for the event.
+        tests:
+          - not_null
+      - name: page_url
+        description: The URL of the page where the event occurred.
+        tests:
+          - not_null
+      - name: event_type
+        description: The type of the event.
+        tests:
+          - not_null
+      - name: user_id
+        description: The unique identifier for the user associated with the event.
+        tests:
+          - not_null
+      - name: product_id
+        description: The unique identifier for the product associated with the event. Set to 'Not applicable' if it is null or empty in the original data.
+        tests:
+          - not_null
+      - name: session_id
+        description: The unique identifier for the session during which the event occurred.
+        tests:
+          - not_null
+      - name: created_at
+        description: The date and time when the event was created.
+        tests:
+          - not_null
+      - name: order_id
+        description: The unique identifier for the order associated with the event. Set to 'Not applicable' if it is null or empty in the original data.
+        tests:
+          - not_null
+      - name: date_load
+        description: The date when the data was loaded into the database.
+        tests:
+          - not_null
+
+  - name: intermediate_order_items
+    description: |
+      This table contains the intermediate order items data. It is created by joining the stg_order_items, stg_orders, and stg_products tables.
+    columns:
+      - name: order_items_id
+        description: The unique identifier for the order item.
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: The unique identifier for the order.
+        tests:
+          - not_null
+      - name: user_id
+        description: The unique identifier for the user who placed the order.
+        tests:
+          - not_null
+      - name: product_id
+        description: The unique identifier for the product in the order.
+        tests:
+          - not_null
+      - name: quantity
+        description: The quantity of the product in the order.
+        tests:
+          - not_null
+      - name: date_load
+        description: The date when the data was loaded into the database.
+        tests:
+          - not_null
+
+  - name: intermediate_orders
+    description: |
+      This table contains the intermediate orders data. It is created by joining the stg_orders, snapshot_users, stg_promos, and stg_addresses tables. The promo_id field is set to '9999' if it is null or empty in the original data. The tracking_id field is set to 'No Tracking ID' if it is null or empty in the original data.
+    columns:
+      - name: order_id
+        description: The unique identifier for the order.
+        tests:
+          - not_null
+      - name: user_id
+        description: The unique identifier for the user who placed the order.
+        tests:
+          - not_null
+      - name: order_total
+        description: The total cost of the order.
+        tests:
+          - not_null
+      - name: promo_id
+        description: The unique identifier for the promotion applied to the order. Set to '9999' if it is null or empty in the original data.
+        tests:
+          - not_null
+      - name: address_id
+        description: The unique identifier for the address where the order was delivered.
+        tests:
+          - not_null
+      - name: created_at_utc
+        description: The date and time when the order was created.
+        tests:
+          - not_null
+      - name: shipping_cost_dollars
+        description: The cost of shipping for the order.
+        tests:
+          - not_null
+      - name: order_cost_dollars
+        description: The cost of the order.
+        tests:
+          - not_null
+      - name: tracking_id
+        description: The tracking ID for the order. Set to 'No Tracking ID' if it is null or empty in the original data.
+        tests:
+          - not_null
+      - name: shipping_service
+        description: The service used to ship the order.
+        tests:
+          - not_null
+      - name: estimated_delivery_at_utc
+        description: The estimated delivery date and time for the order.
+        tests:
+          - not_null
+      - name: delivered_at_utc
+        description: The actual delivery date and time for the order.
+        tests:
+          - not_null
+      - name: days_to_deliver
+        description: The number of days it took to deliver the order.
+        tests:
+          - not_null
+      - name: status
+        description: The status of the order.
+        tests:
+          - not_null
+      - name: date_load_utc
+        description: The date when the data was loaded into the database.
+        tests:
+          - not_null
+
+  - name: intermediate_users
+    description: |
+      This table contains the intermediate users data. It is created by joining the snapshot_users and stg_addresses tables.
+    columns:
+      - name: user_id
+        description: The unique identifier for the user.
+        tests:
+          - not_null
+      - name: address_id
+        description: The unique identifier for the user's address.
+        tests:
+          - not_null
+      - name: created_at
+        description: The date and time when the user was created.
+        tests:
+          - not_null
+      - name: first_name
+        description: The first name of the user.
+        tests:
+          - not_null
+      - name: last_name
+        description: The last name of the user.
+        tests:
+          - not_null
+      - name: phone_number
+        description: The phone number of the user.
+        tests:
+          - not_null
+      - name: email
+        description: The email address of the user.
+        tests:
+          - not_null
+      - name: updated_at
+        description: The date and time when the user's information was last updated.
+        tests:
+          - not_null
+      - name: date_load
+        description: The date when the data was loaded into the database.
+        tests:
+          - not_null
+
+  - name: intermediate_suppliers_products
+    description: "This view combines information from the 'check_suppliers_snapshot' and 'stg_products' tables. Each row represents a unique supplier-product combination."
+    columns:
+      - name: suppliers_id
+        description: "The unique identifier for each supplier."
+        tests:
+          - not_null
+          - unique
+      - name: product_id
+        description: "The identifier of the product supplied by the supplier."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: suppliers_name
+        description: "The name of the supplier."
+        tests:
+          - not_null
+      - name: suppliers_email
+        description: "The email address of the supplier."
+        tests:
+          - not_null
+          - unique
+      - name: suppliers_phone_number
+        description: "The phone number of the supplier."
+        tests:
+          - not_null
+      - name: product_name
+        description: "The name of the product supplied by the supplier."
+        tests:
+          - not_null
+      - name: suppliers_product_price_dollars
+        description: "The price of the product supplied by the supplier in dollars."
+        tests:
+          - not_null
+      - name: product_price
+        description: "The price of the product."
+        tests:
+          - not_null

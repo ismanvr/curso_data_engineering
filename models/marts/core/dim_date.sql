@@ -1,16 +1,22 @@
+{{
+  config(
+    materialized='table',
+    unique_key=['date_id']
+  )
+}}
 with
 
-dim_date as (
+stg_date as (
 
-    select * from {{ ref('stg_dates') }}
+    select * from {{ ref('stg_date') }}
 
 ),
 
-renamed_cast as (
+dim_date as (
 
     select
         date_forecast
-        , id_date
+        , date_id
         , year_date
         , month_date
         , desc_month
@@ -18,11 +24,13 @@ renamed_cast as (
         , day_before
         , year_week_day
         , week_date
-        --Añadir trimestre, cuantrimestre, semestre, año fiscal, trimestre fiscal, cuatrimestre fiscal y semestre fiscal
+        , quarter
+        , quadmester
+        , semester
 
-    from source
+    from stg_date
     
 
 )
 
-select * from renamed
+select * from dim_date

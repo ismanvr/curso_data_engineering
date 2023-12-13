@@ -1,0 +1,380 @@
+version: 2
+
+models:
+  - name: dim_addresses
+    description: This table contains addresses from the source 'stg_addresses', 'snapshot_users', and 'stg_orders'.
+    columns:
+      - name: address_id
+        description: The primary key for the address.
+        tests:
+          - not_null
+          - unique
+      - name: zipcode
+        description: The zipcode of the address.
+        tests:
+          - not_null
+      - name: country
+        description: The country of the address.
+        tests:
+          - not_null
+      - name: address
+        description: The address location.
+        tests:
+          - not_null
+      - name: state
+        description: The state of the address.
+        tests:
+          - not_null
+      - name: date_load
+        description: The timestamp when the data was loaded.
+        tests:
+          - not_null
+      - name: source_type
+        description: The source type of the address. Can be 'user', 'order', or 'both'.
+        tests:
+          - not_null
+
+  - name: dim_date
+    description: |
+      This model contains the 'dim_date' table which is created from the 'stg_date' table.
+    columns:
+      - name: date_forecast
+        description: The forecasted date
+        tests:
+          - is_date
+      - name: date_id
+        description: The unique identifier for each date
+        tests:
+          - positive_values
+          - not_null
+      - name: year_date
+        description: The year part of the date
+        tests:
+          - positive_values
+      - name: month_date
+        description: The month part of the date
+        tests:
+          - positive_values
+      - name: desc_month
+        description: The description of the month
+      - name: id_year_month
+        description: The unique identifier for each year and month
+        tests:
+          - positive_values
+      - name: day_before
+        description: The day before the current date
+      - name: year_week_day
+        description: The day of the week for the year
+        tests:
+          - positive_values
+      - name: week_date
+        description: The week number of the date
+        tests:
+          - positive_values
+      - name: quarter
+        description: The quarter of the year for the date
+        tests:
+          - positive_values
+      - name: quadmester
+        description: The quadmester of the year for the date
+        tests:
+          - positive_values
+      - name: semester
+        description: The semester of the year for the date
+        tests:
+          - positive_values
+
+
+  - name: dim_orders
+    description: This model contains the 'dim_orders' table which is created from the 'intermediate_orders' table.
+    columns:
+      - name: order_id
+        description: The unique identifier for each order
+        tests:
+          - not_null
+          - unique
+      - name: user_id
+        description: The unique identifier for each user
+        tests:
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
+      - name: address_id
+        description: The unique identifier for each address
+        tests:
+          - relationships:
+              to: ref('stg_addresses')
+              field: address_id
+      - name: promo_id
+        description: The unique identifier for each promotion
+        tests:
+          - not_null
+      - name: created_at_utc
+        description: The creation time of the order in UTC
+      - name: shipping_cost_dollars
+        description: The shipping cost of the order in dollars
+        tests:
+          - positive_values
+      - name: order_cost_dollars
+        description: The cost of the order in dollars
+        tests:
+          - positive_values
+      - name: tracking_id
+        description: The tracking identifier for each order
+          - not_null
+      - name: shipping_service
+        description: The shipping service used for the order
+      - name: estimated_delivery_at_utc
+        description: The estimated delivery time of the order in UTC
+        tests:
+          - not_null
+      - name: delivered_at_utc
+        description: The delivery time of the order in UTC
+        tests:
+          - not_null
+      - name: days_to_deliver
+        description: The number of days taken to deliver the order
+        tests:
+          - not_null
+      - name: status
+        description: The status of the order
+      - name: date_load_utc
+        description: The load date of the order in UTC
+        tests:
+          - not_null
+      - name: order_total
+        description: The total cost of the order
+        tests:
+          - positive_values
+
+  - name: dim_products
+    description: This model contains the 'dim_products' table that is created from 'stg_products'.
+    columns:
+    - name: product_id
+      description: The unique identifier for each product
+      tests:
+        - not_null
+        - unique
+    - name: product_price
+      description: The price of the product
+      tests:
+        - positive_values
+    - name: product_name
+      description: The name of the product
+    - name: inventory
+      description: The inventory of the product
+      tests:
+        - positive_values
+    - name: date_load
+      description: The load date of the product
+      tests:
+        - not_null
+
+  - name: dim_promos
+    description: |
+      This model contains the 'dim_promos' table which is created from the 'stg_promos' table.
+    columns:
+      - name: promo_id
+        description: The unique identifier for each promotion
+        tests:
+          - not_null
+          - unique
+      - name: des_promo
+        description: The description of the promotion
+      - name: discount
+        description: The discount of the promotion
+        tests:
+          - positive_values
+      - name: status
+        description: The status of the promotion
+          - not_null
+      - name: date_load
+        description: The load date of the promotion
+        tests:
+          - not_null
+
+version: 2
+
+models:
+  - name: dim_users
+    description: |
+      This model contains the 'dim_users' table which is created from the 'snapshot_users' table.
+    columns:
+      - name: user_id
+        description: The unique identifier for each user
+        tests:
+          - not_null
+          - unique
+      - name: updated_at
+        description: The updated time of the user
+        tests:
+          - not_null
+      - name: address_id
+        description: The unique identifier for each address
+        tests:
+          - not_null
+      - name: last_name
+        description: The last name of the user
+      - name: created_at
+        description: The creation time of the user
+        tests:
+          - not_null
+      - name: phone_number
+        description: The phone number of the user
+      - name: first_name
+        description: The first name of the user
+      - name: email
+        description: The email of the user
+      - name: date_load
+        description: The load date of the user
+        tests:
+          - not_null
+
+  - name: fct_budget
+    description: |
+      This model contains the 'fct_budget' table which is created from the 'intermediate_budget_products' table.
+    columns:
+      - name: budget_id
+        description: The unique identifier for each budget
+        tests:
+          - not_null
+          - unique
+      - name: _row
+        description: The row number
+        tests:
+          - positive_values
+      - name: quantity
+        description: The quantity of the product
+        tests:
+          - positive_values
+      - name: budget_date
+        description: The date of the budget
+        tests:
+          - is_date
+      - name: product_id
+        description: The unique identifier for each product
+        tests:
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: date_load
+        description: The load date of the budget
+        tests:
+          - not_null
+
+  - name: fct_events
+    description: This model contains the 'fct_events' table which is created from the 'intermediate_events' table.
+    columns:
+      - name: event_id
+        description: The unique identifier for each event
+        tests:
+          - not_null
+          - unique
+      - name: page_url
+        description: The URL of the page where the event occurred
+        tests:
+          - valid_url
+      - name: event_type
+        description: The type of the event
+      - name: user_id
+        description: The unique identifier for each user
+        tests:
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
+      - name: product_id
+        description: The unique identifier for each product
+        tests:
+          - not_null
+          - relationships:
+              to: ref('intermediate_events')
+              field: product_id
+      - name: session_id
+        description: The unique identifier for each session
+        tests:
+          - not_null        
+      - name: created_at
+        description: The creation time of the event
+        tests:
+          - not_null
+      - name: order_id
+        description: The unique identifier for each order
+        tests:
+          - not_null
+          - relationships:
+              to: ref('intermediate_events')
+              field: order_id
+      - name: date_load
+        description: The load date of the event
+        tests:
+          - not_null
+          
+  - name: fct_order_items
+    description: This model contains the 'fct_order_items' table which is created from the 'intermediate_orderitems' table.
+    columns:
+      - name: order_items_id
+        description: The unique identifier for each order item
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: The unique identifier for each order
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: product_id
+        description: The unique identifier for each product
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: quantity
+        description: The quantity of the product in the order
+        tests:
+          - positive_values
+      - name: date_load
+        description: The load date of the order item
+        tests:
+          - not_null
+
+  - name: dim_suppliers
+    description: "This table contains information about suppliers and their products. Each row represents a unique supplier-product combination."
+    columns:
+      - name: suppliers_id
+        description: "The unique identifier for each supplier."
+        tests:
+          - not_null
+          - unique
+      - name: product_id
+        description: "The identifier of the product supplied by the supplier."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: suppliers_name
+        description: "The name of the supplier."
+        tests:
+          - not_null
+      - name: suppliers_email
+        description: "The email address of the supplier."
+        tests:
+          - not_null
+          - unique
+      - name: suppliers_phone_number
+        description: "The phone number of the supplier."
+        tests:
+          - not_null
+      - name: product_name
+        description: "The name of the product supplied by the supplier."
+        tests:
+          - not_null
+      - name: suppliers_product_price_dollars
+        description: "The price of the product supplied by the supplier in dollars."
+        tests:
+          - not_null
+
+

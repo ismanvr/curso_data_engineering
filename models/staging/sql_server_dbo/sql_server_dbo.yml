@@ -2,120 +2,348 @@ version: 2
 
 sources:
 
-  - name: sql_server_dbo # name of the source 
-    schema: sql_server_dbo # this is the schema our raw data lives in
-    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB" # this is the name of our database
-
+  - name: sql_server_dbo
+    schema: sql_server_dbo
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"
     quoting:
       database: false
       schema: false
       identifier: false
-
     freshness:
-      warn_after: {count: 200, period: hour}
-      error_after: {count: 250, period: hour}
-
+      warn_after: {count: 200, period: day}
+      error_after: {count: 250, period: day}
     tables:
-
       - name: addresses
         loaded_at_field: _fivetran_synced
-        description: ""
+        description: "This table contains address information."
+        tests:
+          - not_null:
+              column_name: address_id
+          - unique:
+              column_name: address_id
+          - positive_values:
+              column_name: zipcode
         columns:
           - name: address_id
             data_type: varchar
-            description: ""
+            description: "The unique identifier for each address."
           - name: zipcode
             data_type: number
-            description: ""
+            description: "The postal code for the address."
           - name: country
             data_type: varchar
-            description: ""
+            description: "The country where the address is located."
           - name: address
             data_type: varchar
-            description: ""
+            description: "The street address."
           - name: state
             data_type: varchar
-            description: ""
+            description: "The state or province where the address is located."
           - name: _fivetran_deleted
             data_type: boolean
-            description: ""
+            description: "Indicates whether the record has been deleted in the source system."
           - name: _fivetran_synced
             data_type: timestamp_tz
-            description: ""
-          
+            description: "The timestamp of the last sync operation for this record."
+            tests:
+              - is_date
+
       - name: events
         loaded_at_field: _fivetran_synced
+        description: "This table contains event information."
+        tests:
+          - not_null:
+              column_name: event_id
+          - unique:
+              column_name: event_id
+          - valid_url:
+              column_name: page_url
+          - is_date:
+              column_name: created_at
         columns:
-        - name: event_id
-        - name: page_url
-        - name: event_type
-        - name: user_id
-        - name: product_id
-        - name: session_id
-        - name: created_at
-        - name: order_id
-        - name: _fivetran_deleted
-        - name: _fivetran_synced
+          - name: event_id
+            data_type: varchar
+            description: "The unique identifier for each event."
+          - name: page_url
+            data_type: varchar
+            description: "The URL of the page where the event occurred."
+          - name: event_type
+            data_type: varchar
+            description: "The type of the event."
+          - name: user_id
+            data_type: varchar
+            description: "The unique identifier for the user associated with the event."
+          - name: product_id
+            data_type: varchar
+            description: "The unique identifier for the product associated with the event."
+          - name: session_id
+            data_type: varchar
+            description: "The unique identifier for the session during which the event occurred."
+          - name: created_at
+            data_type: timestamp_tz
+            description: "The timestamp when the event was created."
+          - name: order_id
+            data_type: varchar
+            description: "The unique identifier for the order associated with the event."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Indicates whether the record has been deleted in the source system."
+          - name: _fivetran_synced
+            data_type: timestamp_tz
+            description: "The timestamp of the last sync operation for this record."
+            tests:
+              - is_date
 
       - name: orders
         loaded_at_field: _fivetran_synced
+        description: "This table contains order information."
+        tests:
+          - not_null:
+              column_name: order_id
+          - unique:
+              column_name: order_id
+          - positive_values:
+              column_name: shipping_cost
+              column_name: order_cost
+              column_name: order_total
+          - is_date:
+              column_name: created_at
         columns:
-        - name: order_id
-        - name: shipping_service
-        - name: shipping_cost
-        - name: address_id
-        - name: created_at
-        - name: promo_id
-        - name: estimated_delivery
-        - name: order_cost
-        - name: user_id
-        - name: order_total
-        - name: delivered_at
-        - name: tracking_id
-        - name: status
-        - name: _fivetran_deleted
-        - name: _fivetran_synced
+          - name: order_id
+            data_type: varchar
+            description: "The unique identifier for each order."
+          - name: shipping_service
+            data_type: varchar
+            description: "The shipping service used for the order."
+          - name: shipping_cost
+            data_type: float
+            description: "The cost of shipping for the order."
+          - name: address_id
+            data_type: varchar
+            description: "The unique identifier for the address associated with the order."
+          - name: created_at
+            data_type: timestamp_tz
+            description: "The timestamp when the order was created."
+          - name: promo_id
+            data_type: varchar
+            description: "The unique identifier for the promotion associated with the order."
+          - name: estimated_delivery_at
+            data_type: timestamp_tz
+            description: "The estimated delivery date for the order."
+          - name: order_cost
+            data_type: float
+            description: "The cost of the order."
+          - name: user_id
+            data_type: varchar
+            description: "The unique identifier for the user who placed the order."
+          - name: order_total
+            data_type: float
+            description: "The total amount of the order."
+          - name: delivered_at
+            data_type: timestamp_tz
+            description: "The delivery date for the order."
+          - name: tracking_id
+            data_type: varchar
+            description: "The tracking ID for the order."
+          - name: status
+            data_type: varchar
+            description: "The status of the order."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Indicates whether the record has been deleted in the source system."
+          - name: _fivetran_synced
+            data_type: timestamp_tz
+            description: "The timestamp of the last sync operation for this record."
+            tests:
+              - is_date
 
       - name: order_items
         loaded_at_field: _fivetran_synced
+        description: "This table contains order item information."
+        tests:
+          - not_null:
+              column_name: order_id
+              column_name: product_id
+          - positive_values:
+              column_name: quantity
         columns:
-        - name: order_id
-        - name: product_id
-        - name: quantity
-        - name: _fivetran_deleted
-        - name: _fivetran_synced
+          - name: order_id
+            data_type: varchar
+            description: "The unique identifier for each order."
+          - name: product_id
+            data_type: varchar
+            description: "The unique identifier for the product associated with the order."
+          - name: quantity
+            data_type: int
+            description: "The quantity of the product ordered."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Indicates whether the record has been deleted in the source system."
+          - name: _fivetran_synced
+            data_type: timestamp_tz
+            description: "The timestamp of the last sync operation for this record."
+            tests:
+              - is_date
 
       - name: products
         loaded_at_field: _fivetran_synced
+        description: "This table contains product information."
+        tests:
+          - not_null:
+              column_name: product_id
+          - unique:
+              column_name: product_id
+          - positive_values:
+              column_name: price
+              column_name: inventory
         columns:
-        - name: product_id
-        - name: price
-        - name: name
-        - name: inventory
-        - name: _fivetran_deleted
-        - name: _fivetran_synced
+          - name: product_id
+            data_type: varchar
+            description: "The unique identifier for each product."
+          - name: price
+            data_type: float
+            description: "The price of the product."
+          - name: name
+            data_type: varchar
+            description: "The name of the product."
+          - name: inventory
+            data_type: int
+            description: "The inventory count for the product."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Indicates whether the record has been deleted in the source system."
+          - name: _fivetran_synced
+            data_type: timestamp_tz
+            description: "The timestamp of the last sync operation for this record."
+            tests:
+              - is_date
 
       - name: promos
         loaded_at_field: _fivetran_synced
+        description: "This table contains promotion information."
+        tests:
+          - not_null:
+              column_name: promo_id
+          - unique:
+              column_name: promo_id
+          - positive_values:
+              column_name: discount
         columns:
-        - name: promo_id
-        - name: discount
-        - name: status
-        - name: _fivetran_deleted
-        - name: _fivetran_synced
+          - name: promo_id
+            data_type: varchar
+            description: "The unique identifier for each promotion."
+          - name: discount
+            data_type: float
+            description: "The discount amount for the promotion."
+          - name: status
+            data_type: varchar
+            description: "The status of the promotion."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Indicates whether the record has been deleted in the source system."
+          - name: _fivetran_synced
+            data_type: timestamp_tz
+            description: "The timestamp of the last sync operation for this record."
+            tests:
+              - is_date
 
       - name: users
         loaded_at_field: _fivetran_synced
+        description: "This table contains user information."
+        tests:
+          - not_null:
+              column_name: user_id
+          - unique:
+              column_name: user_id
+          - is_date:
+              column_name: update_at
+              column_name: created_at
         columns:
-        - name: user_id
-        - name: update_at
-        - name: address_id
-        - name: last_name
-        - name: created_at
-        - name: phone_number
-        - name: total_orders
-        - name: first_name
-        - name: email
-        - name: _fivetran_deleted
-        - name: _fivetran_synced
+          - name: user_id
+            data_type: varchar
+            description: "The unique identifier for each user."
+          - name: update_at
+            data_type: timestamp_tz
+            description: "The timestamp when the user's information was last updated."
+          - name: address_id
+            data_type: varchar
+            description: "The unique identifier for the user's address."
+          - name: last_name
+            data_type: varchar
+            description: "The user's last name."
+          - name: created_at
+            data_type: timestamp_tz
+            description: "The timestamp when the user was created."
+          - name: phone_number
+            data_type: varchar
+            description: "The user's phone number."
+          - name: total_orders
+            data_type: int
+            description: "The total number of orders placed by the user."
+            tests:
+              - positive_values
+          - name: first_name
+            data_type: varchar
+            description: "The user's first name."
+          - name: email
+            data_type: varchar
+            description: "The user's email address."
+          - name: _fivetran_deleted
+            data_type: boolean
+            description: "Indicates whether the record has been deleted in the source system."
+          - name: _fivetran_synced
+            data_type: timestamp_tz
+            description: "The timestamp of the last sync operation for this record."
+            tests:
+              - is_date
+
+      - name: suppliers
+        loaded_at_field: _fivetran_synced
+        description: |
+          This table contains information about suppliers. Each row represents a unique supplier.
+        columns:
+          - name: suppliers_id
+            description: The unique identifier for each supplier.
+            tests:
+              - not_null
+              - unique
+
+          - name: name
+            description: The name of the supplier.
+            tests:
+              - not_null
+
+          - name: address
+            description: The address of the supplier.
+            tests:
+              - not_null
+
+          - name: phone_number
+            description: The phone number of the supplier.
+            tests:
+              - not_null
+
+          - name: email
+            description: The email address of the supplier.
+            tests:
+              - not_null
+              - unique
+
+          - name: product_id
+            description: The identifier of the product supplied by the supplier.
+
+          - name: product_price
+            description: The price of the product supplied by the supplier.
+            tests:
+              - not_null
+
+          - name: product_name
+            description: The name of the product supplied by the supplier.
+            tests:
+              - not_null
+
+          - name: _fivetran_synced
+            description: The timestamp when the data was synced.
+            tests:
+              - not_null
 

@@ -1,11 +1,27 @@
-WITH stg_users AS (
+{{
+  config(
+    materialized='incremental',
+    unique_key=['user_id']
+  )
+}}
+
+WITH intermediate_users AS (
     SELECT * 
-    FROM {{ ref('stg_users') }}
+    FROM {{ ref('intermediate_users') }}
     ),
 
-renamed_casted AS (
-    SELECT *
-    FROM stg_users
+dim_users AS (
+    SELECT
+        user_id,
+        updated_at,
+        address_id,
+        last_name,
+        created_at,
+        phone_number,
+        first_name,
+        email,
+        date_load
+    FROM intermediate_users
     )
 
-SELECT * FROM renamed_casted
+SELECT * FROM dim_users

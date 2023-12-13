@@ -4,20 +4,22 @@
     target_schema='staging',
     target_table='order_items'
     ) 
-    }}
+}}
 
-WITH stg_order_items AS (
+WITH src_order_items AS (
     SELECT * FROM {{ source('sql_server_dbo', 'order_items') }}
-
 ),
-renamed_cast AS (
+
+stg_order_items AS (
     SELECT
-        {{ dbt_utils.generate_surrogate_key(['order_id','product_id']) }} AS order_items_id, --uso una clave compuesta porque la clave primaria consta de 2 columnas
-        cast(order_id as varchar(50)) as order_id,
-        cast(product_id as varchar (50)) as product_id,
-        cast(quantity as int) as quantity,
-        _fivetran_deleted,
-        _fivetran_synced AS date_load
-    FROM stg_order_items
+        CAST({{ dbt_utils.generate_surrogate_key(['order_id','product_id']) }} AS VARCHAR(50)) AS order_items_id,
+        CAST({{ dbt_utils.generate_surrogate_key(['order_id']) }} AS VARCHAR(50)) AS order_id,
+        CAST({{ dbt_utils.generate_surrogate_key(['product_id']) }} AS VARCHAR(50)) AS product_id,
+        CAST(quantity as int) as quantity,
+        CAST(_fivetran_deleted as boolean) as _fivetran_deleted,
+        CAST(_fivetran_synced as timestamp) as date_load
+    FROM src_order_items
 )
-SELECT * FROM renamed_cast
+
+SELECT * FROM stg_order_items
+

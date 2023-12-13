@@ -1,8 +1,13 @@
---esto no sería una fact table, sino una dimensión debido a que order_items refleja mejor la max granularidad
 
-WITH stg_orders AS (
+{{
+  config(
+    materialized='table',
+    unique_key=['order_id']
+  )
+}}
+WITH intermediate_orders AS (
     SELECT * 
-    FROM {{ ref('stg_orders') }}
+    FROM {{ ref('intermediate_orders') }}
 ),
 
 
@@ -10,9 +15,8 @@ dim_orders AS (
     SELECT
         order_id 
         , user_id 
-        , order_total
-        , promo_id
         , address_id
+        , promo_id
         , created_at_utc
         , shipping_cost_dollars
         , order_cost_dollars
@@ -23,7 +27,8 @@ dim_orders AS (
 		, days_to_deliver        
         , status
         , date_load_utc
-    FROM stg_orders
-    )
+        , order_total
+    FROM intermediate_orders
+)
 
 SELECT * FROM dim_orders

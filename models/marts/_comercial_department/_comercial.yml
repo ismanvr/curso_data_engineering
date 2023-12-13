@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: sales_data
+    description: "This model combines information from the 'snapshot_users' and 'intermediate_orderitems' tables. Each row represents a unique user-order-product combination."
+    columns:
+      - name: user_id
+        description: "The unique identifier for each user."
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: "The identifier of the order placed by the user."
+        tests:
+          - not_null
+      - name: product_id
+        description: "The identifier of the product ordered by the user."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: quantity
+        description: "The quantity of the product ordered by the user."
+        tests:
+          - not_null
+
+  - name: supplier_performance_analysis
+    description: "This model analyzes the performance of suppliers based on the 'intermediate_suppliers_products' and 'intermediate_orderitems' tables. Each row represents a unique supplier."
+    columns:
+      - name: suppliers_id
+        description: "The unique identifier for each supplier."
+        tests:
+          - not_null
+          - unique
+      - name: suppliers_name
+        description: "The name of the supplier."
+        tests:
+          - not_null
+      - name: number_of_orders
+        description: "The number of orders placed with the supplier."
+        tests:
+          - not_null
+      - name: total_quantity
+        description: "The total quantity of products ordered from the supplier."
+        tests:
+          - not_null
+      - name: average_product_price
+        description: "The average price of the products supplied by the supplier."
+        tests:
+          - not_null
+      - name: average_order_total
+        description: "The average total of the orders placed with the supplier."
+        tests:
+          - not_null
+      - name: average_profit
+        description: "The average profit made from the products supplied by the supplier."
+        tests:
+          - not_null

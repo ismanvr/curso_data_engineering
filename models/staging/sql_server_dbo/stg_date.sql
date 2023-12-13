@@ -1,14 +1,14 @@
---este es de los pocos casos que no tiene source, se genera a partir de una consulta de sql
 
-{{ 
-    config(
-        materialized='table', 
-        sort='date_day',
-        dist='date_day',
-        pre_hook="alter session set timezone = 'Europe/Madrid'; alter session set week_start = 7;" 
-        ) }}
 
-with date as (
+{{ config(
+    materialized='table', 
+    sort='date_day',
+    dist='date_day',
+    pre_hook="alter session set timezone = 'America/New_York'; alter session set week_start = 7;" 
+    ) 
+}}
+
+WITH date AS (
     {{ dbt_utils.date_spine(
         datepart="day",
         start_date="cast('2000-01-01' as date)",
@@ -17,17 +17,19 @@ with date as (
     }}  
 )
 
-
-select
-      date_day as date_forecast
-    , year(date_day)*10000+month(date_day)*100+day(date_day) as id_date
-    , year(date_day) as anio
-    , month(date_day) as mes
-    ,monthname(date_day) as desc_mes
-    , year(date_day)*100+month(date_day) as id_anio_mes
-    , date_day-1 as dia_previo
-    , year(date_day)||weekiso(date_day)||dayofweek(date_day) as anio_semana_dia
-    , weekiso(date_day) as semana
-from date
-order by
-    date_day desc
+SELECT
+    date_day AS date_forecast,
+    year(date_day)*10000+month(date_day)*100+day(date_day) AS date_id,
+    year(date_day) AS year_date,
+    month(date_day) AS month_date,
+    monthname(date_day) AS desc_month,
+    year(date_day)*100+month(date_day) AS id_year_month,
+    DATEADD(day, -1, date_day) AS day_before,
+    year(date_day)||weekiso(date_day)||dayofweek(date_day) AS year_week_day,
+    weekiso(date_day) AS week_date,
+    quarter(date_day) AS quarter,
+    ceil(month(date_day)/4) AS quadmester,
+    ceil(month(date_day)/6) AS semester
+FROM date
+ORDER BY
+    date_day DESC
