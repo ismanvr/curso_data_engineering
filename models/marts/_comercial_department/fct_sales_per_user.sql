@@ -1,6 +1,5 @@
 {{ config(
     materialized='incremental',    
-    unique_key = 'order_items_id',
     target_schema='core'
 ) 
 }}
