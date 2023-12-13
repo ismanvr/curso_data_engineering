@@ -22,7 +22,7 @@ stg_addresses AS (
 intermediate_users AS (
     SELECT
         u.user_id 
-        , a.address_id
+        , COALESCE(a.address_id, 'no address') AS address_id
         , u.created_at
         , u.first_name
         , u.last_name
@@ -35,3 +35,4 @@ intermediate_users AS (
 )
 
 SELECT * FROM intermediate_users
+

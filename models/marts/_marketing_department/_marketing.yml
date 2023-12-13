@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: promo_sales
+    description: "This model combines information from the 'intermediate_orders' and 'stg_promos' tables. Each row represents a unique promotion."
+    columns:
+      - name: promo_id
+        description: "The unique identifier for each promotion."
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('stg_promos')
+              field: promo_id
+      - name: des_promo
+        description: "The description of the promotion."
+      - name: num_orders
+        description: "The number of orders associated with each promotion."
+        tests:
+          - not_null
+      - name: total_sales_dollars
+        description: "The total sales in dollars associated with each promotion."
+        tests:
+          - not_null
+      - name: avg_order_value_dollars
+        description: "The average order value in dollars associated with each promotion."
+        tests:
+          - not_null
+      - name: total_shipping_cost_dollars
+        description: "The total shipping cost in dollars associated with each promotion."
+        tests:
+          - not_null
+      - name: avg_shipping_cost_dollars
+        description: "The average shipping cost in dollars associated with each promotion."
+        tests:
+          - not_null

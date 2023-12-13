@@ -1,4 +1,4 @@
---este es de los pocos casos que no tiene source, se genera a partir de una consulta de sql
+
 
 {{ config(
     materialized='table', 

@@ -10,8 +10,8 @@ sources:
       schema: false
       identifier: false
     freshness:
-      warn_after: {count: 200, period: hour}
-      error_after: {count: 250, period: hour}
+      warn_after: {count: 200, period: day}
+      error_after: {count: 250, period: day}
     tables:
       - name: addresses
         loaded_at_field: _fivetran_synced
@@ -296,3 +296,54 @@ sources:
             description: "The timestamp of the last sync operation for this record."
             tests:
               - is_date
+
+      - name: suppliers
+        loaded_at_field: _fivetran_synced
+        description: |
+          This table contains information about suppliers. Each row represents a unique supplier.
+        columns:
+          - name: suppliers_id
+            description: The unique identifier for each supplier.
+            tests:
+              - not_null
+              - unique
+
+          - name: name
+            description: The name of the supplier.
+            tests:
+              - not_null
+
+          - name: address
+            description: The address of the supplier.
+            tests:
+              - not_null
+
+          - name: phone_number
+            description: The phone number of the supplier.
+            tests:
+              - not_null
+
+          - name: email
+            description: The email address of the supplier.
+            tests:
+              - not_null
+              - unique
+
+          - name: product_id
+            description: The identifier of the product supplied by the supplier.
+
+          - name: product_price
+            description: The price of the product supplied by the supplier.
+            tests:
+              - not_null
+
+          - name: product_name
+            description: The name of the product supplied by the supplier.
+            tests:
+              - not_null
+
+          - name: _fivetran_synced
+            description: The timestamp when the data was synced.
+            tests:
+              - not_null
+

@@ -1,0 +1,33 @@
+version: 2
+
+models:
+- name: stg_budget
+  description: |
+    This table contains the staging budget data. It includes a row identifier, product ID, quantity, month, and the date when the data was loaded into the database. The product_id field is tested for not null values and is also checked for its relationship with the product_id field in the stg_products table.
+  columns:
+    - name: _row
+      description: The unique identifier for the row.
+      tests:
+        - not_null
+        - unique
+    - name: product_id
+      description: The unique identifier for the product.
+      tests:
+        - not_null
+        - relationships:
+            to: ref('stg_products')
+            field: product_id
+    - name: quantity
+      description: The quantity of the product in the budget.
+      tests:
+        - not_null
+        - positive_values
+    - name: budget_date
+      description: The month of the budget.
+      tests:
+        - not_null
+    - name: date_load
+      description: The date when the data was loaded into the database.
+      tests:
+        - not_null
+

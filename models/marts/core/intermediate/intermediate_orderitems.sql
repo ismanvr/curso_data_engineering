@@ -31,7 +31,9 @@ stg_products AS (
 intermediate_order_items AS (
     SELECT
         oi.order_items_id 
-        , o.order_id 
+        , o.order_id
+        , o.user_id 
+        , o.order_total
         , p.product_id
         , oi.quantity
         , oi.date_load

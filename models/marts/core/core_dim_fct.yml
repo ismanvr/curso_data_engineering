@@ -340,3 +340,41 @@ models:
         tests:
           - not_null
 
+  - name: dim_suppliers
+    description: "This table contains information about suppliers and their products. Each row represents a unique supplier-product combination."
+    columns:
+      - name: suppliers_id
+        description: "The unique identifier for each supplier."
+        tests:
+          - not_null
+          - unique
+      - name: product_id
+        description: "The identifier of the product supplied by the supplier."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: suppliers_name
+        description: "The name of the supplier."
+        tests:
+          - not_null
+      - name: suppliers_email
+        description: "The email address of the supplier."
+        tests:
+          - not_null
+          - unique
+      - name: suppliers_phone_number
+        description: "The phone number of the supplier."
+        tests:
+          - not_null
+      - name: product_name
+        description: "The name of the product supplied by the supplier."
+        tests:
+          - not_null
+      - name: suppliers_product_price_dollars
+        description: "The price of the product supplied by the supplier in dollars."
+        tests:
+          - not_null
+
+
